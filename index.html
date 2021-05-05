@@ -30,7 +30,7 @@
                     <input class="form-control" type="number" id="sec" v-model.number="seconds" placeholder="ss">
                 </div>
                 <div>
-                    <p>Your pace is: <span v-if="(minutes < 10 && minutes != 0)">0</span>{{ minutes }}:<span v-if="(seconds < 10 && seconds != 0)">0</span>{{ seconds }}</p>
+                    <p v-if="(minutes != 0 || seconds != 0)">Your pace is: <span v-if="(minutes < 10 && minutes != 0)">0</span>{{ minutes }}:<span v-if="(seconds < 10 && seconds != 0)">0</span>{{ seconds }}</p>
                     <div class="form-group">
                         <label for="marathon">Enter distance: (in Km)</label>
                         <input class="form-control" type="number" id="marathon" v-model.number="distance">
@@ -71,6 +71,21 @@
                     }
                     if (timeSeconds <= 9) {
                         timeSeconds = '0' + timeSeconds.toString();
+                    }
+                    if (this.seconds < 0) {
+                        if (this.minutes != 0) {
+                            this.minutes --;
+                            this.seconds = 59;
+                        } else {
+                            this.seconds = 0;
+                            totalSeconds = timeHours = timeMinutes;
+                            timeSeconds = 0;
+                        }
+                    }
+                    if (this.minutes < 0) {
+                        this.minutes = 0;
+                        totalSeconds = timeHours = timeMinutes = this.seconds;
+                        timeSeconds = 0;
                     }
                     return `${timeHours}:${timeMinutes}:${timeSeconds}`;
                 }
