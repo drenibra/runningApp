@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+    <title>Document</title>
+    <style>
+        .form-control {
+            width: 70px;
+            margin-left: 20px;
+        } .form-group {
+            display: flex;
+            align-items: center;
+        } .jumbotron {
+            padding: 1rem 2rem !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container  mt-5">
+            <div class="jumbotron">
+                <h1 class="text-center">Calculate running time</h1>
+                <div class="form-group mt-4">
+                    <label>Enter your pace</label>
+                    <input class="form-control" type="number" id="min" v-model.number="minutes" placeholder="mm">
+                    <input class="form-control" type="number" id="sec" v-model.number="seconds" placeholder="ss">
+                </div>
+                <div>
+                    <p>Your pace is: <span v-if="(minutes < 10 && minutes != 0)">0</span>{{ minutes }}:<span v-if="(seconds < 10 && seconds != 0)">0</span>{{ seconds }}</p>
+                    <div class="form-group">
+                        <label for="marathon">Enter distance: (in Km)</label>
+                        <input class="form-control" type="number" id="marathon" v-model.number="distance">
+                    </div>
+                    <p>Total time to run {{distance}}Km: {{ totalTime }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                minutes: '',
+                seconds: '',
+                distance: '42'
+            },
+            computed: {
+                totalTime: function() {
+                    interval = parseInt(this.seconds / 60);
+                    for (let i = 1; i <= interval; i++) {
+                        console.log(i);
+                        this.minutes++;
+                        this.seconds -= 60;
+                    }
+                    var totalSeconds = this.minutes * 60 + this.seconds;
+                    var time = ((this.distance * totalSeconds)/60)/60;
+                    var timeHours = parseInt(time);
+                    var timeMinutes = (time - timeHours) * 60;
+                    var timeSeconds = Math.round((timeMinutes - parseInt(timeMinutes))*60);
+                    timeMinutes = parseInt(timeMinutes);
+                    if (timeHours <= 9) {
+                        timeHours = '0' + timeHours.toString();
+                    }
+                    if (timeMinutes <= 9) {
+                        timeMinutes = '0' + timeMinutes.toString();
+                    }
+                    if (timeSeconds <= 9) {
+                        timeSeconds = '0' + timeSeconds.toString();
+                    }
+                    return `${timeHours}:${timeMinutes}:${timeSeconds}`;
+                }
+            }
+        })
+    </script>
+</body>
+</html>
